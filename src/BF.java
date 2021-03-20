@@ -30,19 +30,26 @@ public class BF {
         return "";
     }
 
+    public static String toChar(int asciiNum){
 
-    public static void interpreter(){
+        char ch = (char) asciiNum;
+        return String.valueOf(ch);
+    }
 
-        ArrayList<Integer> output = new ArrayList<Integer>(Collections.nCopies(1, 0));
-        String bfCode = input();
-        int index = 0;
-        int n = 0;
+
+    public static void interpreter(String code){
+
+        ArrayList<Integer> output = new ArrayList<Integer>(Collections.nCopies(2, 0));
+        int index = 1;
+        int n = 1;
         char ch, c;
+        int flag;
 
 
-        for(int i = 0; i < bfCode.length(); i++){
+        for(int i = 0; i < code.length(); i++){
 
-            ch = bfCode.charAt(i);
+            flag = 0;
+            ch = code.charAt(i);
 
             if(ch == '>') {
 
@@ -77,69 +84,85 @@ public class BF {
                 }
             }
 
+            if(ch == '.'){
+
+                System.out.print(toChar(output.get(index)));
+            }
+
             if(ch == '['){
 
                 String loop = "";
 
-                while(bfCode.charAt(i+1) != ']'){
+                while(code.charAt(i+1) != ']'){
 
-                    loop += bfCode.charAt(i+1);
+                    loop += code.charAt(i+1);
                     i += 1;
                 }
 
-                System.out.println(loop);
+                while(flag == 0){
 
-                for(int g = 0; g < loop.length(); g++) { //>++++++++[<+++++++++>-]<.>++++[<+++++++>-]<+.+++++++..+++.>>++++++[<+++++++>-]<++.------------.>++++++[<+++++++++>-]<+.<.+++.------.--------.>>>++++[<++++++++>-]<+
+                    for(int g = 0; g < loop.length(); g++){
 
-                    c = loop.charAt(g);
+                        c = loop.charAt(g);
 
-                    if (c == '>') {
+                        if(c == '>') {
 
-                        index += 1;
-                        n += 1;
+                            index += 1;
+                            n += 1;
 
-                        if (n >= output.size()) {
+                            if(n >= output.size()){
 
-                            output.add(0);
-                        }
-                    }
-
-                    if (c == '<') {
-
-                        if (index > 0) {
-
-                            index -= 1;
-                            n -= 1;
-                        }
-                    }
-
-                    if (c == '+') {
-
-                        output.set(index, output.get(index) + 1);
-                    }
-
-                    if (c == '-') {
-
-                        if (output.get(index) > 0) {
-
-                            output.set(index, output.get(index) - 1);
+                                output.add(0);
+                            }
                         }
 
-                        if(output.get(index) == 0){
+                        if(c == '<') {
 
-                            break;
+                            if(index > 0) {
+
+                                index -= 1;
+                                n -= 1;
+                            }
                         }
+
+                        if(c == '+'){
+
+                            output.set(index, output.get(index)+1);
+                        }
+
+                        if(c == '-'){
+
+                            if(output.get(index) > 0){
+
+                                output.set(index, output.get(index)-1);
+                            }
+
+                            if(output.get(index) == 0){
+                                flag = 1;
+                                break;
+                            }
+                        }
+
+                        if(ch == '.'){
+
+                            System.out.print(toChar(output.get(index)));
+                        }
+
                     }
                 }
+
             }
         }
-
-        read(output);
     }
 
 
     public static void main(String[] args) {
 
-        interpreter();
+        String bfCode = input();
+        interpreter(bfCode);
     }
 }
+
+//>++++++++[<+++++++++>-]<.>++++[<+++++++>-]<+.+++++++..+++.>>++++++[<+++++++>-]<+
+//+.------------.>++++++[<+++++++++>-]<+.<.+++.------.--------.>>>++++[<++++++++>-
+//]<+.
