@@ -90,7 +90,7 @@ The program also works with "nested loops" (`[` and `]`), and each memory cell's
    ... (never terminates)
 ```
 
-### Ex.3 (Golden Ratio)
+#### Ex.3 (Golden Ratio)
 ```BF
   // console 'input'
   ++++++[>++++++++<-]>+.---.>>>+>>+>++>+>+>+>>+>+++>+>>+>+>+>>+>>>>+>>>>+>++>>>>+>+<[[>>>]<<<[>>>>>>>>
