@@ -1,6 +1,8 @@
 import java.util.Scanner;
 import java.util.ArrayList;
 
+import static java.util.Collections.*;
+
 
 public class BF {
 
@@ -23,13 +25,14 @@ public class BF {
     }
 
 
-    public static void read(int[] output){
+    public static void read(ArrayList output) {
 
-        for(int i = 0; i < output.length; i++){
+        for (Object o : output) {
 
-            System.out.print(output[i] + " ");
+            System.out.print(o + " ");
         }
     }
+
 
     public static String toChar(int asciiNum) {
 
@@ -44,7 +47,8 @@ public class BF {
         int c = 0;
         int index = 0;
         int limes = 500;
-        int[] output = new int[limes];
+        int maxIndex = 0;
+        ArrayList<Integer> output = new ArrayList<Integer>(nCopies(1, 0));
 
         for (int i = 0; i < code.length(); i++) {
 
@@ -55,11 +59,20 @@ public class BF {
                 if (index == limes) {
 
                     index = 0;
+
                 } else {
 
                     index = index + 1;
+
+                    if (index > maxIndex) {
+
+                        maxIndex = index;
+                        output.add(0);
+                    }
+
                 }
             }
+
             if (ch == '<') {
 
                 if (index != 0) {
@@ -70,60 +83,79 @@ public class BF {
                     index = limes;
                 }
             }
+
             if (ch == '+') {
 
-                output[index]++;
+                output.set(index, output.get(index) + 1);
             }
+
             if (ch == '-') {
 
-                output[index]--;
+                output.set(index, output.get(index) - 1);
             }
+
             if (ch == '.') {
 
-                System.out.print((output[index]));
+                if (code.contains(",")) {
+
+                    System.out.print(output.get(index));
+                } else {
+
+                    System.out.print(toChar(output.get(index)));
+                }
             }
+
             if (ch == '[') {
 
-                if (output[index] == 0) {
+                if (output.get(index) == 0) {
 
-                    i++;
+                    i += 1;
+
                     while (c > 0 || code.charAt(i) != ']') {
 
-                        if (code.charAt(i) == '[') c++;
-                        if (code.charAt(i) == ']') c--;
-                        i++;
+                        if (code.charAt(i) == '[')
+                            c += 1;
+                        if (code.charAt(i) == ']')
+                            c -= 1;
+
+                        i += 1;
                     }
                 }
             }
+
             if (ch == ']') {
 
-                if (output[index] != 0) {
+                if (output.get(index) != 0) {
 
-                    i--;
+                    i -= 1;
 
                     while (c > 0 || code.charAt(i) != '[') {
 
-                        if (code.charAt(i) == '[') c--;
-                        if (code.charAt(i) == ']') c++;
-                        i--;
+                        if (code.charAt(i) == '[')
+                            c -= 1;
+                        if (code.charAt(i) == ']')
+                            c += 1;
+
+                        i -= 1;
                     }
 
-                    i--;
+                    i -= 1;
                 }
             }
 
             if (ch == ',') {
 
-                output[index] = sc.nextInt();
+                output.set(index, sc.nextInt());
             }
         }
 
 
-        if(!code.contains(".")) {
+        if (!code.contains(".")) {
 
             read(output);
         }
     }
+
 
     public static void main(String[] args) {
 
