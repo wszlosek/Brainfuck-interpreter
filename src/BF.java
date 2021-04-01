@@ -1,19 +1,19 @@
 import java.util.Scanner;
 import java.util.ArrayList;
-import java.util.Collections;
 
 
 public class BF {
 
-    public static String input(){
+    public static Scanner sc = new Scanner(System.in);
 
-        Scanner sc = new Scanner(System.in);
+    public static String input() {
+
         String bf = sc.nextLine();
 
-        for(char ch: bf.toCharArray()){
+        for (char ch : bf.toCharArray()) {
 
-            if(ch != '+' && ch != '-' && ch != '<' && ch != '>'
-                    && ch != '[' && ch!=']' && ch != '.' && ch != ','){
+            if (ch != '+' && ch != '-' && ch != '<' && ch != '>'
+                    && ch != '[' && ch != ']' && ch != '.' && ch != ',') {
 
                 bf = bf.replaceAll(String.valueOf(ch), "");
             }
@@ -22,147 +22,112 @@ public class BF {
         return bf;
     }
 
-    public static String read(ArrayList<Integer> numbers){
 
-        for (Integer i: numbers)
-            System.out.print(i.toString() + " ");
+    public static void read(int[] output){
 
-        return "";
+        for(int i = 0; i < output.length; i++){
+
+            System.out.print(output[i] + " ");
+        }
     }
 
-    public static String toChar(int asciiNum){
+    public static String toChar(int asciiNum) {
 
         char ch = (char) asciiNum;
         return String.valueOf(ch);
     }
 
 
-    public static void interpreter(String code){
+    public static void interpreter(String code) {
 
-        ArrayList<Integer> output = new ArrayList<Integer>(Collections.nCopies(2, 0));
-        int index = 1;
-        int n = 1;
-        char ch, c;
-        int flag;
+        char ch;
+        int c = 0;
+        int index = 0;
+        int limes = 500;
+        int[] output = new int[limes];
 
+        for (int i = 0; i < code.length(); i++) {
 
-        for(int i = 0; i < code.length(); i++){
-
-            flag = 0;
             ch = code.charAt(i);
 
-            if(ch == '>') {
+            if (ch == '>') {
 
-                index += 1;
-                n += 1;
+                if (index == limes) {
 
-                if(n >= output.size()){
+                    index = 0;
+                } else {
 
-                    output.add(0);
+                    index = index + 1;
                 }
             }
+            if (ch == '<') {
 
-            if(ch == '<') {
+                if (index != 0) {
 
-                if(index > 0) {
+                    index = index - 1;
+                } else {
 
-                    index -= 1;
-                    n -= 1;
+                    index = limes;
                 }
             }
+            if (ch == '+') {
 
-            if(ch == '+'){
-
-                output.set(index, output.get(index)+1);
+                output[index]++;
             }
+            if (ch == '-') {
 
-            if(ch == '-'){
-
-                if(output.get(index) > 0){
-
-                    output.set(index, output.get(index)-1);
-                }
+                output[index]--;
             }
+            if (ch == '.') {
 
-            if(ch == '.'){
-
-                System.out.print(toChar(output.get(index)));
+                System.out.print((output[index]));
             }
+            if (ch == '[') {
 
-            if(ch == '['){
+                if (output[index] == 0) {
 
-                String loop = "";
+                    i++;
+                    while (c > 0 || code.charAt(i) != ']') {
 
-                while(code.charAt(i+1) != ']'){
-
-                    loop += code.charAt(i+1);
-                    i += 1;
-                }
-
-                while(flag == 0){
-
-                    for(int g = 0; g < loop.length(); g++){
-
-                        c = loop.charAt(g);
-
-                        if(c == '>') {
-
-                            index += 1;
-                            n += 1;
-
-                            if(n >= output.size()){
-
-                                output.add(0);
-                            }
-                        }
-
-                        if(c == '<') {
-
-                            if(index > 0) {
-
-                                index -= 1;
-                                n -= 1;
-                            }
-                        }
-
-                        if(c == '+'){
-
-                            output.set(index, output.get(index)+1);
-                        }
-
-                        if(c == '-'){
-
-                            if(output.get(index) > 0){
-
-                                output.set(index, output.get(index)-1);
-                            }
-
-                            if(output.get(index) == 0){
-                                flag = 1;
-                                break;
-                            }
-                        }
-
-                        if(ch == '.'){
-
-                            System.out.print(toChar(output.get(index)));
-                        }
-
+                        if (code.charAt(i) == '[') c++;
+                        if (code.charAt(i) == ']') c--;
+                        i++;
                     }
                 }
-
             }
+            if (ch == ']') {
+
+                if (output[index] != 0) {
+
+                    i--;
+
+                    while (c > 0 || code.charAt(i) != '[') {
+
+                        if (code.charAt(i) == '[') c--;
+                        if (code.charAt(i) == ']') c++;
+                        i--;
+                    }
+
+                    i--;
+                }
+            }
+
+            if (ch == ',') {
+
+                output[index] = sc.nextInt();
+            }
+        }
+
+
+        if(!code.contains(".")) {
+
+            read(output);
         }
     }
 
-
     public static void main(String[] args) {
 
-        String bfCode = input();
-        interpreter(bfCode);
+        interpreter(input());
     }
-}
 
-//>++++++++[<+++++++++>-]<.>++++[<+++++++>-]<+.+++++++..+++.>>++++++[<+++++++>-]<+
-//+.------------.>++++++[<+++++++++>-]<+.<.+++.------.--------.>>>++++[<++++++++>-
-//]<+.
+}
